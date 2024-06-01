@@ -1,0 +1,133 @@
+@layer reset, variables, dummy, header, animations;
+
+@layer reset {
+  *:where(
+      :not(html, iframe, canvas, img, svg, video, input):not(svg *, symbol *)
+    ) {
+    all: unset;
+    display: revert;
+  }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  ul,
+  ol {
+    margin-inline-start: 0;
+    margin-block-start: 0;
+  }
+  button,
+  a {
+    cursor: pointer;
+    &:not([class]):focus {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer variables {
+  :root {
+    --nav-bg-color: #fff;
+    --nav-fg-color: rebeccapurple;
+  }
+}
+
+@layer dummy {
+  .main {
+    width: min(1080px, 96%);
+    margin-inline: auto;
+    margin-block: 48px;
+  }
+  .section {
+    display: grid;
+    gap: 24px;
+    @media (min-width: 768px) {
+      grid-template-columns: 2fr 3fr;
+    }
+  }
+  p,
+  figure {
+    margin-bottom: 8px;
+  }
+}
+
+@layer titles {
+  .title {
+    font-size: clamp(24px, 24px + 2vw, 36px);
+    margin-bottom: 8px;
+    line-height: 1.1;
+    font-weight: 600;
+    color: #212121;
+    letter-spacing: -0.7px;
+  }
+}
+
+@layer header {
+  .header {
+    background-color: var(--nav-bg-color);
+    color: var(--nav-fg-color);
+    border-bottom: 2px solid var(--nav-fg-color);
+    &__nav {
+      width: min(1080px, 96%);
+      margin-inline: auto;
+      padding-inline: 16px;
+      padding-block: 24px;
+      text-align: center;
+      a {
+        padding: 4px 8px;
+        margin-inline: 4px;
+        font-weight: 900;
+        &.active {
+          border-bottom: 2px solid var(--nav-fg-color);
+          pointer-events: none;
+        }
+        outline: 0;
+        &:focus:not(:hover) {
+          outline: 2px dotted var(--nav-fg-color);
+        }
+      }
+    }
+  }
+}
+
+@layer animations {
+  @supports (view-transition-name: exists) {
+    @keyframes new {
+      from {
+        opacity: 0;
+        transform: translateZ(-1400px) translateY(100px);
+      }
+    }
+    @keyframes old {
+      to {
+        opacity: 0;
+        transform: translateZ(-1400px) translateY(100px);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      @view-transition {
+        navigation: auto;
+      }
+      .main {
+        view-transition-name: main;
+      }
+      ::view-transition-old(main) {
+        animation: old 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+      ::view-transition-new(main) {
+        animation: new 0.25s 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+    }
+  }
+}
